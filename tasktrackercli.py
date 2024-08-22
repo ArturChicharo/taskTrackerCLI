@@ -5,7 +5,8 @@ from datetime import datetime
 
 parser = argparse.ArgumentParser()
 
-parser.add_argument("-a", "--add", help="Type task description in quotation marks", required=False)
+parser.add_argument("-a", "--add", help="Type task description", required=False)
+parser.add_argument("-u", "--update", help="Specify task id and updated description with the format 'id:description'", required=False)
 
 args = parser.parse_args()
 
@@ -53,5 +54,28 @@ def addTask():
         with open(file_path, 'w') as file:
             json.dump(data, file, indent=4)
 
+def updateTask():
+    try:
+        with open(file_path, 'r') as file:
+            data = json.load(file)
+        
+        task_id_str, task_description_str = args.update.split(":", 1)
+        task_id = int(task_id_str.strip())
+        task_description = task_description_str.strip()
+
+        for task in data:
+            if task["id"] == task_id:
+                task["description"] = task_description
+        
+        with open(file_path, 'w') as file:
+            json.dump(data, file, indent=4)
+    except ValueError:
+        print("Invalid format for update. Use the format 'id:description'.")
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
 if args.add:
     addTask()
+
+if args.update:
+    updateTask()
