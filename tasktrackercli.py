@@ -5,9 +5,12 @@ from datetime import datetime
 
 parser = argparse.ArgumentParser()
 
-parser.add_argument("-a", "--add", help="Type task description", required=False)
-parser.add_argument("-u", "--update", help="Specify task id and updated description with the format 'id:description'", required=False)
+parser.add_argument("-a", "--add", help="Type task description", required=False, type=str)
+parser.add_argument("-u", "--update", help="Specify task id and updated description with the format 'id:description'", required=False, type=str)
 parser.add_argument("-d", "--delete", help="Delete task by id", required=False, type=int)
+parser.add_argument("-mip", "--markinprogress", help="Marks specified id as in-progress", required=False, type=int)
+parser.add_argument("-md", "--markdone", help="Marks specified id as done", required=False, type=int)
+parser.add_argument("-l", "--list", help="List tasks based on argument 'all' 'done' 'notdone' 'inprogress'", required=False, type=str)
 
 args = parser.parse_args()
 
@@ -101,6 +104,86 @@ def deleteTask():
     except Exception as e:
         print(f"An error occurred: {e}")
 
+def markInProgress():
+    try:
+        with open(file_path, 'r') as file:
+            data = json.load(file)
+        
+        task_status_updated = False
+
+        for task in data:
+            if task["id"] == args.markinprogress:
+                task["status"] = "In Progress"
+                task["updatedAt"] = formatted_time
+                task_status_updated = True
+        
+        with open(file_path, 'w') as file:
+            json.dump(data, file, indent=4)
+
+            if task_status_updated:
+                print("Task status successfully updated.")
+            else:
+                print("No task exists with specified id.")
+
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
+def markDone():
+    try:
+        with open(file_path, 'r') as file:
+            data = json.load(file)
+        
+        task_status_updated = False
+
+        for task in data:
+            if task["id"] == args.markdone:
+                task["status"] = "Done"
+                task["updatedAt"] = formatted_time
+                task_status_updated = True
+        
+        with open(file_path, 'w') as file:
+            json.dump(data, file, indent=4)
+
+            if task_status_updated:
+                print("Task status successfully updated.")
+            else:
+                print("No task exists with specified id.")
+
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
+def list():
+    try:
+        with open(file_path, 'r') as file:
+            data = json.load(file)
+        
+        option = args.list.strip()
+        tasks_to_list = True
+
+        if option == "all":
+            for task in data:
+                print(task)
+        elif option == "done":
+            for task in data:
+                if task["status"] == "Done":
+                    print(task)
+        elif option == "inprogress":
+            for task in data:
+                if task["status"] == "In Progress":
+                    print(task)
+        elif option == "notdone":
+            for task in data:
+                if task["status"] != "Done":
+                    print(task)
+        else:
+            tasks_to_list = False
+        
+        if not tasks_to_list:
+            print("No tasks with specified status exist.")
+
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
 if args.add:
     addTask()
 
@@ -109,3 +192,12 @@ if args.update:
 
 if args.delete:
     deleteTask()
+
+if args.markinprogress:
+    markInProgress()
+
+if args.markdone:
+    markDone()
+
+if args.list:
+    list()
