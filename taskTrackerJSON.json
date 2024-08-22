@@ -1,23 +1,44 @@
 [
     {
         "id": 1,
-        "description": "Acabar este projeto hoje",
-        "status": "In Progress",
-        "createdAt": "19:03 22 August 2024",
-        "updatedAt": "19:05 22 August 2024"
+        "description": "List tasks in a table",
+        "status": "Done",
+        "createdAt": "23:18 22 August 2024",
+        "updatedAt": "00:16 23 August 2024"
     },
     {
         "id": 2,
-        "description": "Emebelezar este projeto amanha",
+        "description": "Clean up code a little more",
         "status": "todo",
-        "createdAt": "19:03 22 August 2024",
-        "updatedAt": "19:03 22 August 2024"
+        "createdAt": "23:19 22 August 2024",
+        "updatedAt": "23:19 22 August 2024"
     },
     {
         "id": 3,
-        "description": "Fazer Jantar",
-        "status": "Done",
-        "createdAt": "19:09 22 August 2024",
-        "updatedAt": "19:25 22 August 2024"
+        "description": "Improve input validation",
+        "status": "todo",
+        "createdAt": "23:20 22 August 2024",
+        "updatedAt": "23:20 22 August 2024"
+    },
+    {
+        "id": 4,
+        "description": "Improve feedback after operations",
+        "status": "todo",
+        "createdAt": "23:27 22 August 2024",
+        "updatedAt": "23:27 22 August 2024"
+    },
+    {
+        "id": 5,
+        "description": "Task ID Handling",
+        "status": "To do",
+        "createdAt": "23:32 22 August 2024",
+        "updatedAt": "23:32 22 August 2024"
+    },
+    {
+        "id": 6,
+        "description": "Enhance help messages",
+        "status": "To do",
+        "createdAt": "23:32 22 August 2024",
+        "updatedAt": "23:32 22 August 2024"
     }
 ]
