@@ -12,12 +12,12 @@ from typing import List, Dict, Any
 parser = argparse.ArgumentParser()
 
 # Define CLI arguments
-parser.add_argument("-a", "--add", help="Type task description", required=False, type=str)
-parser.add_argument("-u", "--update", help="Specify task id and updated description with the format 'id:description'", required=False, type=str)
-parser.add_argument("-d", "--delete", help="Delete task by id", required=False, type=int)
-parser.add_argument("-mip", "--markinprogress", help="Marks specified id as in-progress", required=False, type=int)
-parser.add_argument("-md", "--markdone", help="Marks specified id as done", required=False, type=int)
-parser.add_argument("-l", "--list", help="List tasks based on argument 'all' 'done' 'notdone' 'inprogress'", required=False, type=str)
+parser.add_argument("-a", "--add", help="Add a new task. Example: -a 'Task description'", required=False, type=str)
+parser.add_argument("-u", "--update", help="Update a task description. Use format 'id:description'. Example: -u '2:New description'", required=False, type=str)
+parser.add_argument("-d", "--delete", help="Delete a task by ID. Example: -d 2", required=False, type=int)
+parser.add_argument("-mip", "--markinprogress", help="Mark a task as 'in-progress' by ID. Example: -mip 2", required=False, type=int)
+parser.add_argument("-md", "--markdone", help="Mark a task as 'done' by ID. Example: -md 2", required=False, type=int)
+parser.add_argument("-l", "--list", help="List tasks. Options: 'all', 'done', 'notdone', 'inprogress'. Example: -l done", required=False, type=str)
 
 args = parser.parse_args()
 
@@ -61,6 +61,7 @@ def addTask():
         data.append(new_task)
         
         writeToFile(data)
+        print(f"New task has been added with ID {new_task['id']}")
     except Exception as e:
         print(f"An error occurred: {e}")
 
@@ -74,13 +75,19 @@ def updateTask():
         task_description = task_description_str.strip()
 
         # Update the specified task
+        task_found = False
         for task in data:
             if task["id"] == task_id:
                 task["description"] = task_description
+                task_found = True
         
         writeToFile(data)
+        if task_found:
+            print(f"Task with ID {task_id} has been updated. New task description: '{task_description}'")
+        else:
+            print(f"Error: There is no task with ID {task_id}")
     except ValueError:
-        print("Invalid format for update. Use the format 'id:description'.")
+        print("Invalid format for update. Use the format 'id:description'")
     except Exception as e:
         print(f"An error occurred: {e}")
 
@@ -99,13 +106,14 @@ def deleteTask():
         writeToFile(data)
 
         if task_deleted:
-            print("Task successfully deleted.")
+            print(f"Task with ID {args.delete} successfully deleted")
         else:
-            print("No task exists with specified id.")
+            print(f"No task exists with ID {args.delete}")
 
     except Exception as e:
         print(f"An error occurred: {e}")
 
+# Verify if task already has the status
 def markInProgress():
     try:
         data = readFile()
@@ -115,20 +123,25 @@ def markInProgress():
         # Update the status of the specified task
         for task in data:
             if task["id"] == args.markinprogress:
-                task["status"] = IN_PROGRESS
-                task["updatedAt"] = formatted_time
-                task_status_updated = True
+                if task["status"] == IN_PROGRESS:
+                    print(f"Task with ID {args.markinprogress} is already marked as '{IN_PROGRESS}'")
+                    return
+                else:
+                    task["status"] = IN_PROGRESS
+                    task["updatedAt"] = formatted_time
+                    task_status_updated = True
         
         writeToFile(data)
 
         if task_status_updated:
-            print("Task status successfully updated.")
+            print(f"Task with ID {args.markinprogress} successfully updated to '{IN_PROGRESS}'")
         else:
-            print("No task exists with specified id.")
+            print(f"No task exists with ID {args.markinprogress}")
 
     except Exception as e:
         print(f"An error occurred: {e}")
 
+# Verify if task already has the status
 def markDone():
     try:
         data = readFile()
@@ -138,16 +151,20 @@ def markDone():
         # Update the status of the specified task
         for task in data:
             if task["id"] == args.markdone:
-                task["status"] = DONE
-                task["updatedAt"] = formatted_time
-                task_status_updated = True
+                if task["status"] == DONE:
+                    print(f"Task with ID {args.markdone} is already marked as '{DONE}'")
+                    return
+                else:
+                    task["status"] = DONE
+                    task["updatedAt"] = formatted_time
+                    task_status_updated = True
         
         writeToFile(data)
 
         if task_status_updated:
-            print("Task status successfully updated.")
+            print(f"Task with ID {args.markdone} successfully updated to '{DONE}'")
         else:
-            print("No task exists with specified id.")
+            print(f"No task exists with ID {args.markdone}")
 
     except Exception as e:
         print(f"An error occurred: {e}")
@@ -180,7 +197,7 @@ def list():
             tasks_exist = False
         
         if not tasks_exist:
-            print("No tasks with specified status exist.")
+            print(f"No tasks with '{option}' status exist.")
         else:
             displayTable(tasks_to_list)
 
