@@ -1,6 +1,6 @@
 # Python Task Tracker CLI
 
-A simple command-line interface (CLI) application for managing tasks. The tasks are stored in a JSON file for persistence.
+A simple command-line interface project from roadmap.sh for managing tasks. The tasks are stored in a JSON file for persistence.
 
 ## Features
 
